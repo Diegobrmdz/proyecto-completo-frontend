@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import pool from '../database.js'
-import req from 'express/lib/request.js';
+
 const router = Router();
 
 router.get('/add', (req, res)=>{
@@ -20,7 +20,6 @@ router.post('/add', async (req, res) =>{
     }
 });
 
-
 router.get('/list', async(req, res) => {
     try {
         const [result] = await pool.query('SELECT * FROM personas');
@@ -30,16 +29,16 @@ router.get('/list', async(req, res) => {
     }
 });
 
-
 router.get('/delete/:id' , async (req, res) => {
     try {
         const { id } = req.params
-        await pool.query(' DELETE FROM personas WHERE id = ?' , [id]);
-        res.redirect()('/list');
+        await pool.query('DELETE FROM personas WHERE id = ?' , [id]);
+        res.redirect('/list');
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 router.get('/edit/:id', async (req, res)=>{
     try {
@@ -51,16 +50,26 @@ router.get('/edit/:id', async (req, res)=>{
         res.status(500).json({ message: error.message });
     }
 });
+
 router.get('/edit/:id', async (req, res)=>{
     try {
         const {id} = req.params
         const {name, lastname, age} = req.body
-        const editpersona = {name, lastname, age}
-        const [persona] = await pool.query('UPDATE personas SET ? WHERE id = ?', [id]);
-        const personaEdit = persona[0]
-        res.redirect('list', { persona: personaEdit })
+        const editpersona = {
+                                name, 
+                                lastname, 
+                                age
+                            }
+
+        await pool.query('UPDATE personas SET ? WHERE id = ?', [editPersona, id]);
+        res.redirect('list');
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
+
+
+
 export default router;
