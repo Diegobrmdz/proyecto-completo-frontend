@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import {join, dirname} from 'path'
 import {fileURLToPath} from 'url'
 import { engine } from 'express-handlebars';
-
+import personasRoutes from './routes/personas.routes.js'
 
 /* ----------------------------- initializacion ----------------------------- */
 const app = express();
@@ -22,7 +22,6 @@ app.engine('.hbs' , engine({
 }));
 app.set('view engine' , '.hbs');
 
-
 /* ------------------------------- middlewares ------------------------------ */
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false}));
@@ -32,6 +31,9 @@ app.use(express.json());
 app.get('/' , (req, res) => {
     res.render('index')
 });
+
+app.use(personasRoutes);
+
 
 /* ------------------------------ public files ------------------------------ */
 app.use(express.static(join(__dirname, 'public')));
